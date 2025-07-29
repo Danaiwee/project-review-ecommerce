@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Mail, Lock, User, UserPlus } from "lucide-react";
 import InputField from "../components/InputField";
 import InputButton from "../components/InputButton";
+import { useUserStore } from "../stores/useUserStore";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +14,7 @@ const SignupPage = () => {
     confirmPassword: "",
   });
 
-  const loading = false;
+  const { signUp, isSigningUp } = useUserStore();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,8 +27,7 @@ const SignupPage = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
-    console.log(formData);
+    signUp(formData);
   };
 
   return (
@@ -93,7 +93,7 @@ const SignupPage = () => {
               onChange={handleInputChange}
             />
 
-            <InputButton loading={loading} text='Sign up' icon={UserPlus} />
+            <InputButton loading={isSigningUp} text='Sign up' icon={UserPlus} />
           </form>
         </div>
       </motion.div>

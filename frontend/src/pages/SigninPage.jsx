@@ -1,8 +1,10 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { useState } from "react";
-import InputField from "../components/InputField";
 import { Lock, LogIn, Mail } from "lucide-react";
+import { useUserStore } from "../stores/useUserStore.js";
+
+import InputField from "../components/InputField";
 import InputButton from "../components/InputButton";
 
 const SigninPage = () => {
@@ -11,7 +13,7 @@ const SigninPage = () => {
     password: "",
   });
 
-  const loading = false;
+  const { signIn, isSigninIn } = useUserStore();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +27,7 @@ const SigninPage = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    console.log(formData);
+    signIn(formData);
   };
   return (
     <main className='flex flex-col justify-center py-12 sm:px-6 lg:px-8 pt-20'>
@@ -69,7 +71,7 @@ const SigninPage = () => {
               onChange={handleInputChange}
             />
 
-            <InputButton loading={loading} text='Sign in' icon={LogIn} />
+            <InputButton loading={isSigninIn} text='Sign in' icon={LogIn} />
           </form>
         </div>
       </motion.div>

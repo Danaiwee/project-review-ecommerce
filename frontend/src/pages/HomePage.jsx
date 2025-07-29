@@ -1,7 +1,6 @@
-import { CATEGORIES, FEATURED_PRODUCTS, PRODUCTS } from "../constants";
+import { CATEGORIES } from "../constants";
 
 import CategoryItem from "../components/CategoryItem";
-import FeaturedProducts from "../components/FeaturedProducts";
 
 const HomePage = () => {
   return (

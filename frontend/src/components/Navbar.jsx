@@ -1,10 +1,23 @@
 import { Link } from "react-router-dom";
-import { ShoppingCart, UserPlus, LogIn, LogOut, Lock } from "lucide-react";
+import {
+  ShoppingCart,
+  UserPlus,
+  LogIn,
+  LogOut,
+  Lock,
+  Loader2,
+} from "lucide-react";
+import { useUserStore } from "../stores/useUserStore.js";
 
 const Navbar = () => {
-  const user = true;
-  const cart = [1, 2];
-  const isAdmin = true;
+  const { user, logout, isLogingOut } = useUserStore();
+
+  const isAdmin = user?.role === "admin" || false;
+  const cart = user?.catItems || [];
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <header className='fixed top-0 left-0 w-full bg-gray-900 bg-opacity-90 backdrop-blur-md shadow-lg z-40 transition-all duration-300 border-b border-emerald-800'>
@@ -55,8 +68,15 @@ const Navbar = () => {
             )}
 
             {user ? (
-              <button className='text-sm text-gray-300 hover:text-gray-500 py-2 px-4 rounded-md flex items-center transition duration-300 ease-in-out cursor-pointer'>
-                <LogOut size={18} />
+              <button
+                className='text-sm text-gray-300 hover:text-gray-500 py-2 rounded-md flex items-center transition duration-300 ease-in-out cursor-pointer'
+                onClick={handleLogout}
+              >
+                {isLogingOut ? (
+                  <Loader2 classNmae='size-5 animate-spin' />
+                ) : (
+                  <LogOut size={18} />
+                )}
                 <span className='hidden sm:inline ml-2'>Log Out</span>
               </button>
             ) : (

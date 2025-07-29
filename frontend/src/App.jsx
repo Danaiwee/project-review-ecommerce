@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
@@ -9,8 +9,17 @@ import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
 import PurchaseSuccess from "./pages/PurchaseSuccess";
 import PurchaseCanceled from "./pages/PurchaseCanceled";
+import { useUserStore } from "./stores/useUserStore";
+import { useEffect } from "react";
 
 function App() {
+  const { user, checkAuth } = useUserStore();
+  const isAdming = user?.role === "admin" || false;
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   return (
     <div className='min-h-screen bg-gray-900 text-white relative overflow-hidden'>
       {/*Background gradient*/}
@@ -25,13 +34,32 @@ function App() {
 
         <Routes>
           <Route path='/' element={<HomePage />} />
-          <Route path='/signup' element={<SignupPage />} />
-          <Route path='/signin' element={<SigninPage />} />
-          <Route path='/cart' element={<CartPage />} />
-          <Route path='/admin' element={<AdminPage />} />
           <Route path='/category/:category' element={<CategoryPage />} />
-          <Route path='/success' element={<PurchaseSuccess />} />
-          <Route path='/canceled' element={<PurchaseCanceled />} />
+
+          <Route
+            path='/signup'
+            element={!user ? <SignupPage /> : <Navigate to='/' />}
+          />
+          <Route
+            path='/signin'
+            element={!user ? <SigninPage /> : <Navigate to='/' />}
+          />
+          <Route
+            path='/cart'
+            element={user ? <CartPage /> : <Navigate to='/signin' />}
+          />
+          <Route
+            path='/admin'
+            element={isAdming ? <AdminPage /> : <Navigate to='/' />}
+          />
+          <Route
+            path='/success'
+            element={user ? <PurchaseSuccess /> : <Navigate to='/signin' />}
+          />
+          <Route
+            path='/canceled'
+            element={user ? <PurchaseCanceled /> : <Navigate to='/signin' />}
+          />
         </Routes>
       </div>
     </div>
