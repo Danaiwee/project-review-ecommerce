@@ -38,7 +38,6 @@ This project is a **full-stack e-commerce platform** built using the **MERN stac
   - Zustand for handling global state, such as **cart management** and **user authentication**.  
 - **Styling & UI Components**:  
   - **Tailwind CSS** for responsive and modern styling.  
-  - **DaisyUI** for pre-styled UI components.  
   - **Lucide-React** and **React Icons** for consistent and aesthetic icons.  
   - **Framer Motion** for smooth animations and transitions.  
   - **React Hot Toast** for notifications and alerts.  
