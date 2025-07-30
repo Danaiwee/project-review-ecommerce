@@ -19,7 +19,7 @@ const couponSchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
-      required: true,
+      default: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -30,6 +30,6 @@ const couponSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Coupon = mongoose.model("Coupoon", couponSchema);
+const Coupon = mongoose.model("Coupon", couponSchema);
 
 export default Coupon;

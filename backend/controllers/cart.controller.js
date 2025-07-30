@@ -29,8 +29,8 @@ export const addToCart = async (req, res) => {
     if (isProductExists) {
       isProductExists.quantity += 1;
     } else {
-      user.cartItems.pus({
-        produc: productId,
+      user.cartItems.push({
+        product: productId,
         quantity: 1,
       });
     }

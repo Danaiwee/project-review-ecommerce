@@ -28,3 +28,13 @@ export function signInValidation(data) {
 
   return true;
 }
+
+export function createProductValidation(data) {
+  const { name, description, price, category, image } = data;
+
+  if (!name || !description || !price || !category || !image) {
+    throw new Error("All fields are required");
+  }
+
+  return true;
+}

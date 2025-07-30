@@ -2,15 +2,10 @@
 import { motion } from "framer-motion";
 import { MoveRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCartStore } from "../stores/useCartStore";
 
 const OrderSummary = () => {
-  const total = 1350;
-  const subtotal = 1500;
-  const coupon = {
-    code: "GIFTSJDNITSVN52RV8",
-    discountPercentage: 10,
-  };
-  const isCouponApplied = true;
+  const { total, subtotal, coupon, isCouponApplied } = useCartStore();
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
@@ -37,14 +32,14 @@ const OrderSummary = () => {
             </dd>
           </dl>
 
-          {savings && (
-            <dl className='flex items-center justify-between gap-4'>
-              <dt className='text-base font-normal text-gray-300'>Savings</dt>
-              <dd className='text-base font-medium text-emerald-400'>
-                -${formattedSavings}
-              </dd>
-            </dl>
-          )}
+          {/* {savings && ( */}
+          <dl className='flex items-center justify-between gap-4'>
+            <dt className='text-base font-normal text-gray-300'>Savings</dt>
+            <dd className='text-base font-medium text-emerald-400'>
+              -${formattedSavings}
+            </dd>
+          </dl>
+          {/* )} */}
 
           {coupon && isCouponApplied && (
             <dl className='flex items-center justify-between gap-4'>

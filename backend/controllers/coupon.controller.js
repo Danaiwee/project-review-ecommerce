@@ -42,9 +42,35 @@ export const validateCoupon = async (req, res) => {
     return res.status(200).json({
       message: "Coupon is valid",
       code: coupon.code,
-      discoutPercentage: coupon.discountPercentage,
+      discountPercentage: coupon.discountPercentage,
     });
   } catch (error) {
     handleError(res, "validateCooupon", error);
+  }
+};
+
+export const createCoupon = async (req, res) => {
+  const userId = req.user._id;
+  const { code, discountPercentage, expirationDate } = req.body;
+
+  if (!code || !discountPercentage || !expirationDate) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+    const newCoupon = await Coupon.create({
+      code,
+      discountPercentage,
+      expirationDate,
+      userId,
+    });
+
+    if (!newCoupon) {
+      return res.status(400).json({ error: "Invalid field" });
+    }
+
+    return res.status(200).json(newCoupon);
+  } catch (error) {
+    handleError(res, "createCoupon", error);
   }
 };

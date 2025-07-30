@@ -20,7 +20,12 @@ router.get("/recommended", getRecommendedProducts);
 
 router.post("/create", protectRoute, adminRoute, createProduct);
 
-router.put("/toggle-feature", protectRoute, adminRoute, toggleFeaturedProduct);
+router.put(
+  "/toggle-feature/:id",
+  protectRoute,
+  adminRoute,
+  toggleFeaturedProduct
+);
 
 router.delete("/:id", protectRoute, adminRoute, deleteProduct);
 

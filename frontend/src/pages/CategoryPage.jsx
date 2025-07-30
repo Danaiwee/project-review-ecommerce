@@ -1,12 +1,24 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
-import { JEANS_PRODUCTS } from "../constants";
+import { useProductStore } from "../stores/useProductStore.js";
+
 import ProductsCard from "../components/ProductsCard";
+import NotFoundProduct from "../components/NotFoundProduct.jsx";
+import { useEffect } from "react";
+import LoadingState from "../components/LoadingState.jsx";
 
 const CategoryPage = () => {
   const { category } = useParams();
-  const products = [1];
+
+  const { products, getProductsByCategory, isGettingProducts } =
+    useProductStore();
+
+  useEffect(() => {
+    getProductsByCategory(category);
+  }, [getProductsByCategory, category]);
+
+  if (isGettingProducts) return <LoadingState />;
 
   return (
     <div className='min-h-screen pt-20'>
@@ -26,16 +38,12 @@ const CategoryPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {products?.length === 0 && (
-            <h2 className='mt-10 text-3xl font-semibold text-gray-300 text-center col-span-full'>
-              No products found
-            </h2>
-          )}
-
-          {JEANS_PRODUCTS.map((product) => (
+          {products.map((product) => (
             <ProductsCard key={product.name} product={product} />
           ))}
         </motion.div>
+
+        {products?.length === 0 && <NotFoundProduct />}
       </div>
     </div>
   );

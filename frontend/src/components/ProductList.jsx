@@ -1,8 +1,40 @@
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import { PRODUCTS } from "../constants";
-import { Star, Trash } from "lucide-react";
+import { Loader2, Star, Trash } from "lucide-react";
+import { useProductStore } from "../stores/useProductStore";
+import { useEffect } from "react";
 
 const ProductList = () => {
+  const {
+    getProducts,
+    isGettingProducts,
+    products,
+    deleteProduct,
+    isDeletingProduct,
+    toggleFeatured,
+    isTogglingProduct,
+  } = useProductStore();
+
+  useEffect(() => {
+    getProducts();
+  }, [getProducts]);
+
+  const handleDeleteProduct = (productId) => {
+    deleteProduct(productId);
+  };
+
+  const handleToggleFeatured = (productId) => {
+    toggleFeatured(productId);
+  };
+
+  if (isGettingProducts) {
+    return (
+      <div className='w-full max-w-7xl mx-auto px-4 mt-20 flex items-center justify-center'>
+        <Loader2 className='size-16 animate-spin' />
+      </div>
+    );
+  }
+
   return (
     <motion.div
       className='bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto'
@@ -48,7 +80,7 @@ const ProductList = () => {
         </thead>
 
         <tbody className='bg-gray-800 divide-y divide-gray-700'>
-          {PRODUCTS.map((product) => (
+          {products.map((product) => (
             <tr
               key={product.name + product.price}
               className='hover:bg-gray-700'
@@ -84,13 +116,25 @@ const ProductList = () => {
                       ? "bg-yellow-400 text-gray-900"
                       : "bg-gray-600 text-gray-300"
                   } hover:bg-yellow-500 transition-colors duration-200`}
+                  onClick={() => handleToggleFeatured(product._id)}
                 >
-                  <Star className='h-5 w-5' />
+                  {isTogglingProduct ? (
+                    <Loader2 className='size-5 animate-spin' />
+                  ) : (
+                    <Star className='h-5 w-5' />
+                  )}
                 </button>
               </td>
               <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
-                <button className='text-red-400 hover:text-red-300'>
-                  <Trash className='h-5 w-5' />
+                <button
+                  className='text-red-400 hover:text-red-300 cursor-pointer'
+                  onClick={() => handleDeleteProduct(product._id)}
+                >
+                  {isDeletingProduct ? (
+                    <Loader2 className='size-5 animate-spin' />
+                  ) : (
+                    <Trash className='h-5 w-5' />
+                  )}
                 </button>
               </td>
             </tr>

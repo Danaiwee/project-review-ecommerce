@@ -1,17 +1,31 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useCartStore } from "../stores/useCartStore";
 
 const CouponCard = () => {
   const [userInputCode, setUserInputCode] = useState("");
 
-  const coupon = {
-    code: "GIFTSJDNITSVN52RV8",
-    discountPercentage: 10,
-  };
-  const isCouponApplied = true;
+  const {
+    coupon,
+    isCouponApplied,
+    applyCoupon,
+    isApplyingCoupon,
+    removeCoupon,
+    availableCoupon,
+  } = useCartStore();
 
-  const handleApplyCoupon = () => {};
+  const handleApplyCoupon = () => {
+    const applyCode = userInputCode.toUpperCase();
+
+    applyCoupon(applyCode);
+    setUserInputCode("");
+  };
+
+  const handleRemoveCoupon = () => {
+    removeCoupon();
+  };
   return (
     <motion.div
       className='space-y-4 rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-sm sm:p-6'
@@ -45,7 +59,11 @@ const CouponCard = () => {
           className='flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 cursor-pointer'
           onClick={handleApplyCoupon}
         >
-          Apply Code
+          {isApplyingCoupon ? (
+            <Loader2 className='size-5 animate-spin' />
+          ) : (
+            <>Apply Code</>
+          )}
         </button>
       </div>
 
@@ -60,21 +78,24 @@ const CouponCard = () => {
             type='button'
             className='mt-2 flex w-full items-center justify-center rounded-lg bg-red-600 
             px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 cursor-pointer'
+            onClick={handleRemoveCoupon}
           >
             Remove coupon
           </button>
         </div>
       )}
 
-      {coupon && !isCouponApplied && (
+      {availableCoupon && !isCouponApplied && (
         <div className='mt-4'>
           <div className='mt-4'>
             <h3 className='text-lg font-medium text-gray-300'>
               Your Available Coupon:
             </h3>
-            <p className='mt-2 text-sm text-gray-400'>
-              {coupon.code} - {coupon.discountPercentage}% off
-            </p>
+            {availableCoupon.map((coupon) => (
+              <p className='mt-2 text-sm text-gray-400' key={coupon.code}>
+                {coupon.code} - {coupon.discountPercentage}% off
+              </p>
+            ))}
           </div>
         </div>
       )}

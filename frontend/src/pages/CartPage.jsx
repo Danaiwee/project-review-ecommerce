@@ -1,15 +1,26 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import { PRODUCTS } from "../constants";
+import { useEffect } from "react";
+
+import { useCartStore } from "../stores/useCartStore";
 
 import CartItem from "../components/CartItem";
 import EmptyCart from "../components/EmptyCart";
 import PeopleAlsoBought from "../components/PeopleAlsoBought";
 import OrderSummary from "../components/OrderSummary";
 import CouponCard from "../components/CouponCard";
+import LoadingState from "../components/LoadingState";
 
 const CartPage = () => {
-  const cart = [1];
+  const { isGettingCartProducts, getCartProducts, cart, getMyCoupon } =
+    useCartStore();
+
+  useEffect(() => {
+    getCartProducts();
+    getMyCoupon();
+  }, [getCartProducts, getMyCoupon]);
+
+  if (isGettingCartProducts) return <LoadingState />;
 
   return (
     <main className='pt-20'>
@@ -20,16 +31,18 @@ const CartPage = () => {
               className='mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl'
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5 }}
             >
               {cart.length > 0 ? (
                 <div className='space-y-4'>
-                  {PRODUCTS.map((product) => (
-                    <CartItem
-                      key={product.name + product.price}
-                      product={product}
-                    />
-                  ))}
+                  {cart &&
+                    cart.map((item) => (
+                      <CartItem
+                        key={item._id}
+                        product={item.product}
+                        quantity={item.quantity}
+                      />
+                    ))}
                 </div>
               ) : (
                 <EmptyCart />
@@ -43,7 +56,7 @@ const CartPage = () => {
                 className='mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full'
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
+                transition={{ duration: 0.5 }}
               >
                 <OrderSummary />
                 <CouponCard />

@@ -8,7 +8,7 @@ import ProductList from "../components/ProductList";
 import AnalyticsTab from "../components/AnalyticsTab";
 
 const AdminPage = () => {
-  const [activeTab, setActiveTab] = useState("analytics");
+  const [activeTab, setActiveTab] = useState("create");
 
   const handleChangeTab = (tabName) => {
     setActiveTab(tabName);

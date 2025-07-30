@@ -1,7 +1,14 @@
-import { ShoppingCart } from "lucide-react";
+import { Loader2, ShoppingCart } from "lucide-react";
+import { useCartStore } from "../stores/useCartStore";
 
 const ProductsCard = ({ product }) => {
   const { name, description, price, image } = product;
+
+  const { addToCart, isAdding } = useCartStore();
+
+  const handleAddCart = (product) => {
+    addToCart(product);
+  };
   return (
     <div className='w-full flex flex-col relative overflow-hidden rounded-lg border border-gray-700 shadow-lg'>
       <div className='relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl bg-white'>
@@ -20,9 +27,21 @@ const ProductsCard = ({ product }) => {
           <p className='text-3xl font-bold text-emerald-400'>${price}</p>
         </div>
 
-        <button className='flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 cursor-pointer'>
-          <ShoppingCart size={18} className='mr-2' />
-          Add to cart
+        <button
+          className='flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 cursor-pointer'
+          onClick={() => handleAddCart(product)}
+        >
+          {isAdding ? (
+            <>
+              <Loader2 className='size-5 animate-spin mr-2' />
+              Adding...
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={18} className='mr-2' />
+              Add to cart
+            </>
+          )}
         </button>
       </div>
     </div>

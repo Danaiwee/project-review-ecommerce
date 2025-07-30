@@ -13,6 +13,7 @@ import {
 import InputField from "../components/InputField";
 import SelectField from "./SelectField";
 import { PRODUCT_CATEGORIES } from "../constants";
+import { useProductStore } from "../stores/useProductStore";
 
 const CreateProductForm = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const CreateProductForm = () => {
     image: "",
   });
 
-  const loading = false;
+  const { createProduct, isCreatingProduct } = useProductStore();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +50,16 @@ const CreateProductForm = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    createProduct(formData);
+
+    setFormData({
+      name: "",
+      description: "",
+      price: "",
+      category: "",
+      image: "",
+    });
   };
   return (
     <motion.div
@@ -129,9 +139,9 @@ const CreateProductForm = () => {
           className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md 
 					shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 
 					focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 cursor-pointer mt-5'
-          disabled={loading}
+          disabled={isCreatingProduct}
         >
-          {loading ? (
+          {isCreatingProduct ? (
             <>
               <Loader
                 className='mr-2 h-5 w-5 animate-spin'

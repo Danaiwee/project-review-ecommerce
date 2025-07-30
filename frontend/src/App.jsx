@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 function App() {
   const { user, checkAuth } = useUserStore();
-  const isAdming = user?.role === "admin" || false;
+  const isAdmin = user?.role === "admin";
 
   useEffect(() => {
     checkAuth();
@@ -50,11 +50,13 @@ function App() {
           />
           <Route
             path='/admin'
-            element={isAdming ? <AdminPage /> : <Navigate to='/' />}
+            element={user && isAdmin ? <AdminPage /> : <Navigate to='/' />}
           />
           <Route
             path='/success'
-            element={user ? <PurchaseSuccess /> : <Navigate to='/signin' />}
+            element={
+              user && isAdmin ? <PurchaseSuccess /> : <Navigate to='/signin' />
+            }
           />
           <Route
             path='/canceled'
