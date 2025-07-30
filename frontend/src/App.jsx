@@ -13,12 +13,14 @@ import { useUserStore } from "./stores/useUserStore";
 import { useEffect } from "react";
 
 function App() {
-  const { user, checkAuth } = useUserStore();
+  const { user, checkAuth, isCheckingAuth } = useUserStore();
   const isAdmin = user?.role === "admin";
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  if (isCheckingAuth) return null;
 
   return (
     <div className='min-h-screen bg-gray-900 text-white relative overflow-hidden'>
@@ -54,9 +56,7 @@ function App() {
           />
           <Route
             path='/success'
-            element={
-              user && isAdmin ? <PurchaseSuccess /> : <Navigate to='/signin' />
-            }
+            element={user ? <PurchaseSuccess /> : <Navigate to='/signin' />}
           />
           <Route
             path='/canceled'

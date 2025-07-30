@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  clearCartItems,
   getUserProfile,
   logout,
   refreshAccesToken,
@@ -17,5 +18,7 @@ router.post("/signin", signIn);
 router.post("/logout", logout);
 
 router.post("/refresh-token", refreshAccesToken);
+
+router.put("/clear", protectRoute, clearCartItems);
 
 export default router;

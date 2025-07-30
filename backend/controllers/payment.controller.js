@@ -2,10 +2,11 @@ import { handleError } from "../lib/error.js";
 import { stripe } from "../lib/stripe.js";
 
 import Coupon from "../models/coupon.model.js";
+import Order from "../models/order.model.js";
 
 export const createCheckoutSession = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user._id.toString();
     const { products, couponCode } = req.body;
 
     if (!Array.isArray(products) || products.length === 0) {
@@ -14,20 +15,20 @@ export const createCheckoutSession = async (req, res) => {
 
     let totalAmount = 0;
 
-    const lineItems = products.map((product) => {
-      const amount = Math.round(product.price * 100); //cents unit
-      totalAmount += amount * product.quantity;
+    const lineItems = products.map((item) => {
+      const amount = Math.round(item.product.price * 100); //cents unit
+      totalAmount += amount * item.quantity;
 
       return {
         price_data: {
           currency: "usd",
           product_data: {
-            name: product.name,
-            images: [product.image],
+            name: item.product.name,
+            images: [item.product.image],
           },
           unit_amount: amount,
         },
-        quantity: product.quantity || 1,
+        quantity: item.quantity || 1,
       };
     });
 
@@ -46,24 +47,28 @@ export const createCheckoutSession = async (req, res) => {
       }
     }
 
+    let discounts = [];
+    if (coupon) {
+      const stripeCoupon = await createStripeCoupon(coupon.discountPercentage);
+      discounts = [{ coupon: stripeCoupon.id }];
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
       success_url:
-        "http://localhost:3000/success?session_id={CHECK_SESSION_ID}",
+        "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "http://localhost:3000/canceled",
-      discounts: coupon
-        ? [{ coupon: await createStripeCoupon(coupon.discountPercentage) }]
-        : [],
+      discounts,
       metadata: {
         userId: userId,
         couponCode: couponCode || "",
         products: JSON.stringify(
-          products.map((product) => ({
-            id: product._id,
-            quantity: product.quantity,
-            price: product.price,
+          products.map((item) => ({
+            id: item.product._id,
+            quantity: item.quantity,
+            price: item.product.price,
           }))
         ),
       },
@@ -86,7 +91,13 @@ export const checkoutSuccess = async (req, res) => {
     const { sessionId } = req.body;
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-    if (session.payment_status === "padi") {
+    //Protect order duplication
+    const isExistingOrder = await Order.findOne({ stripeSessionId: sessionId });
+    if (isExistingOrder) {
+      return res.status(400).json({ message: "Order is already exists" });
+    }
+
+    if (session.payment_status === "paid") {
       if (session.metadata.coupon) {
         await Coupon.findOneAndDelete({
           code: session.metadata.couponCode,

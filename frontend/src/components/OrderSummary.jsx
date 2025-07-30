@@ -3,14 +3,23 @@ import { motion } from "framer-motion";
 import { MoveRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
+import { usePaymentStore } from "../stores/usePaymentStore";
 
 const OrderSummary = () => {
-  const { total, subtotal, coupon, isCouponApplied } = useCartStore();
+  const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
+  const { proceedPayment } = usePaymentStore();
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
   const formattedTotal = total.toFixed(2);
   const formattedSavings = savings.toFixed(2);
+  
+  const handleCheckout = () => {
+    const products = cart;
+    const couponCode = coupon?.code || null;
+
+    proceedPayment(products, couponCode);
+  };
 
   return (
     <motion.div
@@ -63,7 +72,10 @@ const OrderSummary = () => {
           </dl>
         </div>
 
-        <button className='flex w-full items-center justify-center rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 cursor-pointer'>
+        <button
+          className='flex w-full items-center justify-center rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 cursor-pointer'
+          onClick={handleCheckout}
+        >
           Proceed to Checkout
         </button>
 

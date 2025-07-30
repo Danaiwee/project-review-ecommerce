@@ -2,10 +2,25 @@
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle, HandHeart } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import { useEffect } from "react";
 import Confetti from "react-confetti";
 
+import { usePaymentStore } from "../stores/usePaymentStore";
+import LoadingState from "../components/LoadingState";
+
 const PurchaseSuccess = () => {
+  const { checkOutSuccess, isProcessing } = usePaymentStore();
+
+  useEffect(() => {
+    const sessionId = new URLSearchParams(window.location.search).get(
+      "session_id"
+    );
+    if (!sessionId) return;
+
+    checkOutSuccess(sessionId);
+  }, [checkOutSuccess]);
+
+  if (isProcessing) return <LoadingState />;
   return (
     <div className='h-screen flex items-center justify-center pt-20 px-4'>
       <Confetti

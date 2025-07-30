@@ -146,4 +146,14 @@ export const useCartStore = create((set, get) => ({
 
     set({ subtotal, total });
   },
+
+  clearCart: async () => {
+    try {
+      await axios.put("/auth/clear");
+
+      set({ cart: [], coupon: null, total: 0, subtotal: 0 });
+    } catch (error) {
+      console.log(error);
+    }
+  },
 }));

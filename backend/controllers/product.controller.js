@@ -134,3 +134,4 @@ export const toggleFeaturedProduct = async (req, res) => {
     handleError(res, "toggleFeatureProduct", error);
   }
 };
+
