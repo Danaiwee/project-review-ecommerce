@@ -5,7 +5,8 @@ import axios from "../lib/axios.js";
 
 import { useCartStore } from "./useCartStore.js";
 
-const stripePublishKey = import.meta.env.VITE_STRIPE_PUBLISH_KEY;
+const stripePublishKey =
+  "pk_test_51Rpj1xFoHbVOFge9JGmODgNDjEiqk8JY2pd6dUR9BmLQBLvg13x3UcW1OWV5lgnzjNmnGQST3cN7m0ANSmB9y8M600SCfkpH1k";
 
 export const usePaymentStore = create((set) => ({
   isProcessing: false,
