@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import axios from "../lib/axios.js";
 import { signInValidation, signUpValidation } from "../lib/validation.js";
 
-export const useUserStore = create((set) => ({
+export const useUserStore = create((set, get) => ({
   user: null,
   isSigningUp: false,
   isSigningIn: false,
@@ -71,4 +71,51 @@ export const useUserStore = create((set) => ({
       set({ isCheckingAuth: false });
     }
   },
+
+  refreshToken: async () => {
+    if (get().checkAuth) return;
+
+    set({ isCheckingAuth: true });
+    try {
+      const response = await axios.post("/refresh-token");
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      set({ isCheckingAuth: false });
+    }
+  },
 }));
+
+let refreshPromise = null;
+
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // If a refresh is already in progress, wait for it to complete
+        if (refreshPromise) {
+          await refreshPromise;
+          return axios(originalRequest);
+        }
+
+        // Start a new refresh process
+        refreshPromise = useUserStore.getState().refreshToken();
+        await refreshPromise;
+        refreshPromise = null;
+
+        return axios(originalRequest);
+      } catch (refreshError) {
+        // If refresh fails, redirect to login or handle as needed
+        useUserStore.getState().logout();
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
