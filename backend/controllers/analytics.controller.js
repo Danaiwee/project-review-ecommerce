@@ -10,7 +10,7 @@ export const getAnalyticsDataAndSalesData = async (req, res) => {
     const analyticsData = await getAnalyticsData();
 
     const endDate = new Date();
-    const startDate = new Date(endDate.getTime()) - 7 * 24 * 60 * 60 * 1000;
+    const startDate = new Date(endDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     const dailySalesData = await getDailySalesData(startDate, endDate);
 
@@ -49,7 +49,7 @@ async function getAnalyticsData() {
 
 async function getDailySalesData(startDate, endDate) {
   try {
-    const dailaySalesData = await Order.aggregate([
+    const dailySalesData = await Order.aggregate([
       {
         $match: {
           createdAt: {
@@ -81,18 +81,18 @@ async function getDailySalesData(startDate, endDate) {
 
     const dateArray = getDatesInRange(startDate, endDate);
 
-    const returnData = dateArray.map((data) => {
-      const foundData = dailaySalesData.find((item) => item._id === date);
+    const returnData = dateArray.map((date) => {
+      const foundData = dailySalesData.find((item) => item._id === date);
 
       return {
         date,
-        sales: foundData.sales || 0,
-        revenue: foundData.revenue || 0,
+        sales: foundData?.sales || 0,
+        revenue: foundData?.revenue || 0,
       };
     });
 
     return returnData;
   } catch (error) {
-    console.log("Error in getDailaySalesData", error);
+    console.log("Error in getDailySalesData", error);
   }
 }

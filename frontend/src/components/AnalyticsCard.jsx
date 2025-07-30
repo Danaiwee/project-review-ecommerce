@@ -4,6 +4,7 @@ import { formatNumber } from "../lib/utils.js";
 
 const AnalyticsCard = ({ analytic }) => {
   const { title, value, icon: Icon, color } = analytic;
+
   return (
     <motion.div
       className={`bg-gray-800 rounded-lg p-6 shadow-lg overflow-hidden relative ${color}`}
@@ -15,7 +16,7 @@ const AnalyticsCard = ({ analytic }) => {
         <div className='z-10'>
           <p className='text-emerald-300 text-sm mb-1 font-semibold'>{title}</p>
           <h3 className='text-white text-3xl font-bold'>
-            ${formatNumber(value)}
+            {title === "Total Revenue" ? "$" + formatNumber(value) : value}
           </h3>
         </div>
       </div>
