@@ -4,7 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 
-import { connectDB } from "./lib/connectDB.js";
+// import { connectDB } from "./lib/connectDB.js";
 
 // import authRoutes from "./routes/auth.route.js";
 // import productRoutes from "./routes/product.route.js";
@@ -50,5 +50,5 @@ if (process.env.NODE_ENV === "production") {
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT 5000`);
-  connectDB();
+  // connectDB();
 });
