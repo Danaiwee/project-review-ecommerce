@@ -2,10 +2,10 @@
   "name": "3review-project-ecommerce",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/server.js",
+  "main": "backend/test-server.js",
   "scripts": {
-    "dev": "nodemon backend/server.js",
-    "start": "node backend/server.js",
+    "dev": "nodemon backend/test-server.js",
+    "start": "node backend/test-server.js",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
