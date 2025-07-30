@@ -9,6 +9,7 @@ const stripePublishKey = import.meta.env.VITE_STRIPE_PUBLISH_KEY;
 
 export const usePaymentStore = create((set) => ({
   isProcessing: false,
+  orderId: null,
 
   proceedPayment: async (products, couponCode) => {
     try {
@@ -37,8 +38,12 @@ export const usePaymentStore = create((set) => ({
     const { clearCart } = useCartStore.getState();
     set({ isProcessing: true });
     try {
-      await axios.post("/payments/checkout-success", { sessionId });
+      const response = await axios.post("/payments/checkout-success", {
+        sessionId,
+      });
 
+      set({ orderId: response.data.orderId });
+      localStorage.setItem("orderId", response.data.orderId);
       await clearCart();
     } catch (error) {
       console.log(error);

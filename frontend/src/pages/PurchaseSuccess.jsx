@@ -9,7 +9,7 @@ import { usePaymentStore } from "../stores/usePaymentStore";
 import LoadingState from "../components/LoadingState";
 
 const PurchaseSuccess = () => {
-  const { checkOutSuccess, isProcessing } = usePaymentStore();
+  const { checkOutSuccess, isProcessing, orderId } = usePaymentStore();
 
   useEffect(() => {
     const sessionId = new URLSearchParams(window.location.search).get(
@@ -19,6 +19,8 @@ const PurchaseSuccess = () => {
 
     checkOutSuccess(sessionId);
   }, [checkOutSuccess]);
+
+  const orderNumber = orderId?.toUpperCase() || localStorage.getItem("orderId");
 
   if (isProcessing) return <LoadingState />;
   return (
@@ -55,7 +57,7 @@ const PurchaseSuccess = () => {
             <div className='flex items-center justify-between'>
               <span className='text-sm text-gray-400'>Order number</span>
               <span className='text-sm font-semibold text-emerald-400'>
-                #12345
+                {orderNumber}
               </span>
             </div>
             <div className='flex items-center justify-between'>

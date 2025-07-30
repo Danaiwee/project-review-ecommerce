@@ -20,9 +20,12 @@ const ProductsCard = ({ product }) => {
         <h5 className='text-xl font-semibold tracking-tight text-white'>
           {name}
         </h5>
-        <p className='text-sm text-gray-400 font-normal mt-1 line-clamp-2'>
-          {description}
-        </p>
+        <div className='h-12'>
+          <p className='text-sm text-gray-400 font-normal mt-1 line-clamp-2'>
+            {description}
+          </p>
+        </div>
+
         <div className='mt-2 mb-5 flex items-center justify-between'>
           <p className='text-3xl font-bold text-emerald-400'>${price}</p>
         </div>

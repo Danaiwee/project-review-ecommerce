@@ -8,12 +8,13 @@ import {
   Loader2,
 } from "lucide-react";
 import { useUserStore } from "../stores/useUserStore.js";
+import { useCartStore } from "../stores/useCartStore.js";
 
 const Navbar = () => {
   const { user, logout, isLogingOut } = useUserStore();
+  const { cart } = useCartStore();
 
   const isAdmin = user?.role === "admin" || false;
-  const cart = user?.catItems || [];
 
   const handleLogout = async () => {
     await logout();

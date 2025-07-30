@@ -24,7 +24,9 @@ export const getProductsByCategory = async (req, res) => {
   }
 
   try {
-    const products = await Product.find({ category });
+    const products = await Product.find({
+      category: { $regex: new RegExp(`^${category}$`, "i") },
+    });
     if (!products) {
       return res.status(404).json({ error: "Products not found" });
     }
@@ -59,7 +61,7 @@ export const getRecommendedProducts = async (req, res) => {
   try {
     const product = await Product.aggregate([
       {
-        $sample: { size: 4 },
+        $sample: { size: 3 },
       },
       {
         $project: {
@@ -134,4 +136,3 @@ export const toggleFeaturedProduct = async (req, res) => {
     handleError(res, "toggleFeatureProduct", error);
   }
 };
-
