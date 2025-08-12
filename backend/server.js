@@ -22,12 +22,7 @@ const __dirname = path.resolve();
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
