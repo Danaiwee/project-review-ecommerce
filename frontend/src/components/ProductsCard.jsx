@@ -1,12 +1,20 @@
 import { Loader2, ShoppingCart } from "lucide-react";
 import { useCartStore } from "../stores/useCartStore";
+import { useUserStore } from "../stores/useUserStore";
+import { useNavigate } from "react-router-dom";
 
 const ProductsCard = ({ product }) => {
+  const navigate = useNavigate();
+
   const { name, description, price, image } = product;
 
   const { addToCart, isAdding } = useCartStore();
+  const { user } = useUserStore();
+
+  console.log(user);
 
   const handleAddCart = (product) => {
+    if (!user) navigate("/signin");
     addToCart(product);
   };
   return (

@@ -180,5 +180,3 @@ export const clearCartItems = async (req, res) => {
     handleError(res, "clearCartItems", error);
   }
 };
-
-//TODO: Implement refresh accessToken
