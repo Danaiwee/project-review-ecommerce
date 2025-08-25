@@ -22,7 +22,7 @@ const __dirname = path.resolve();
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
-app.use();
+app.use(cors());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
