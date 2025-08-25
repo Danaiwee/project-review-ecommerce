@@ -18,14 +18,14 @@ export const getProducts = async (req, res) => {
 };
 
 export const getProductsByCategory = async (req, res) => {
-  const { category } = req.params;
-  if (!category) {
+  const { category: categoryParam } = req.params;
+  if (!categoryParam) {
     return res.status(400).json({ error: "Category is required" });
   }
 
   try {
     const products = await Product.find({
-      category: { $regex: new RegExp(`^${tag}$`, "i") },
+      category: { $regex: categoryParam, $options: "i" },
     });
     if (!products) {
       return res.status(404).json({ error: "Products not found" });
