@@ -25,7 +25,7 @@ export const getProductsByCategory = async (req, res) => {
 
   try {
     const products = await Product.find({
-      category: { $regex: new RegExp(`^${category}$`, "i") },
+      category: { $regex: new RegExp(`^${tag}$`, "i") },
     });
     if (!products) {
       return res.status(404).json({ error: "Products not found" });
