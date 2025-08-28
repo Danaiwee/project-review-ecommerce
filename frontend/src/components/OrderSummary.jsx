@@ -13,7 +13,7 @@ const OrderSummary = () => {
   const formattedSubtotal = subtotal.toFixed(2);
   const formattedTotal = total.toFixed(2);
   const formattedSavings = savings.toFixed(2);
-  
+
   const handleCheckout = () => {
     const products = cart;
     const couponCode = coupon?.code || null;

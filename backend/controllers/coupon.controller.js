@@ -22,7 +22,8 @@ export const getCoupon = async (req, res) => {
 export const validateCoupon = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { code } = req.body;
+    let { code } = req.body;
+    code = code.trim();
 
     const coupon = await Coupon.findOne({
       code,

@@ -29,6 +29,6 @@ export const generateTokenAndSetCookies = async (userId, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     samesite: "strict",
-    maxAge: 7 * 60 * 60 * 24 * 1000,
+    maxAge: 7 * 60 * 60 * 24 * 1000, // 7days
   });
 };

@@ -59,6 +59,7 @@ export const getFeaturedProducts = async (req, res) => {
 
 export const getRecommendedProducts = async (req, res) => {
   try {
+    //We need random data so we have to use aggregation
     const product = await Product.aggregate([
       {
         $sample: { size: 3 },

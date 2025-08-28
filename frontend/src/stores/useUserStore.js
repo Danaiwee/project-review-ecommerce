@@ -12,7 +12,6 @@ export const useUserStore = create((set, get) => ({
   isCheckingAuth: true,
 
   signUp: async (data) => {
-    console.log("Signup funtion: ", data);
     set({ isSigningUp: true });
 
     try {
