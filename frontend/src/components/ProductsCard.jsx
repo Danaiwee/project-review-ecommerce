@@ -2,18 +2,27 @@ import { Loader2, ShoppingCart } from "lucide-react";
 import { useCartStore } from "../stores/useCartStore";
 import { useUserStore } from "../stores/useUserStore";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const ProductsCard = ({ product }) => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { name, description, price, image } = product;
 
-  const { addToCart, isAdding } = useCartStore();
+  const { addToCart } = useCartStore();
   const { user } = useUserStore();
 
-  const handleAddCart = (product) => {
+  const handleAddCart = async (product) => {
     if (!user) navigate("/signin");
-    addToCart(product);
+    setIsLoading(true);
+    try {
+      await addToCart(product);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <div className='w-full flex flex-col relative overflow-hidden rounded-lg border border-gray-700 shadow-lg'>
@@ -40,7 +49,7 @@ const ProductsCard = ({ product }) => {
           className='flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 cursor-pointer'
           onClick={() => handleAddCart(product)}
         >
-          {isAdding ? (
+          {isLoading ? (
             <>
               <Loader2 className='size-5 animate-spin mr-2' />
               Adding...

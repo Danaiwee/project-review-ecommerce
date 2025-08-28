@@ -40,7 +40,6 @@ export const useCartStore = create((set, get) => ({
   },
 
   addToCart: async (product) => {
-    set({ isAdding: true });
     try {
       await axios.post("/cart", { productId: product._id });
 
@@ -64,8 +63,6 @@ export const useCartStore = create((set, get) => ({
       toast.success("Added to cart successfully");
     } catch (error) {
       console.log(error);
-    } finally {
-      set({ isAdding: false });
     }
   },
 
