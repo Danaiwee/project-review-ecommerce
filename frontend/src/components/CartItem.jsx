@@ -1,13 +1,22 @@
 import { Loader2, Minus, Plus, Trash } from "lucide-react";
 import { useCartStore } from "../stores/useCartStore";
+import { useState } from "react";
 
 const CartItem = ({ product, quantity }) => {
   const { name, description, image, price, _id } = product;
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { removeAllFromCart, isDeleting, updateQuantity } = useCartStore();
+  const { removeAllFromCart, updateQuantity } = useCartStore();
 
-  const handleRemove = (productId) => {
-    removeAllFromCart(productId);
+  const handleRemove = async (productId) => {
+    setIsDeleting(true);
+    try {
+      await removeAllFromCart(productId);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleUpdateQuantity = (productId, quantity) => {
