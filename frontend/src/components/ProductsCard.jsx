@@ -11,8 +11,6 @@ const ProductsCard = ({ product }) => {
   const { addToCart, isAdding } = useCartStore();
   const { user } = useUserStore();
 
-  console.log(user);
-
   const handleAddCart = (product) => {
     if (!user) navigate("/signin");
     addToCart(product);
